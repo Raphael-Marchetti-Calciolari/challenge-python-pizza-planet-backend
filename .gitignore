@@ -150,3 +150,6 @@ migrations/
 pizza.sqlite
 .vscode/launch.json
 .vscode/tasks.json
+
+# MacOS
+.DS_Store
