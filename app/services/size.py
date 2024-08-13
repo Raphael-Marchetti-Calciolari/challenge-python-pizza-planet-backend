@@ -29,7 +29,7 @@ def update_size():
 
 
 @size.route('/id/<_id>', methods=DELETE)
-def delete_ingredient_by_id(_id: int):
+def delete_size_by_id(_id: int):
     size, error = SizeController.delete(_id)
     response = size if not error else {'error': error}
     status_code = 200 if size else 404 if not error else 400
