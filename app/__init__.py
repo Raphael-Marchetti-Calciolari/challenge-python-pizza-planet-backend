@@ -1,15 +1,15 @@
 import inspect
 
 from flask import Blueprint, Flask
+from app.settings import Config
 
-
-def create_app(config_class: str):
+def create_app(config_class:Config):
     flask_app = Flask(__name__)
     flask_app.config.from_object(config_class)
     return flask_app
 
 
-def register_blueprints(flask_app):
+def register_blueprints(flask_app:Flask):
     from app import services
     blueprints = inspect.getmembers(services, lambda member: isinstance(member, Blueprint))
     for name, blueprint in blueprints:
@@ -17,18 +17,18 @@ def register_blueprints(flask_app):
         flask_app.register_blueprint(blueprint, url_prefix=prefix)
 
 
-def register_plugins(flask_app):
+def register_plugins(flask_app:Flask):
     from .plugins import db, ma
     db.init_app(flask_app)
     ma.init_app(flask_app)
 
 
-def cors_app(flask_app):
+def cors_app(flask_app:Flask):
     from flask_cors import CORS
     CORS(flask_app)
 
 
-def configure_app(config_class):
+def configure_app(config_class:Config):
     flask_app = create_app(config_class)
     register_blueprints(flask_app)
     register_plugins(flask_app)
@@ -37,4 +37,4 @@ def configure_app(config_class):
     return flask_app
 
 
-flask_app = configure_app('app.settings.Config')
+flask_app = configure_app(Config)
