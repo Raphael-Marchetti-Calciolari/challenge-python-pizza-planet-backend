@@ -1,4 +1,4 @@
-from app.common.http_methods import GET, POST, PUT
+from app.common.http_methods import GET, POST, PUT, DELETE
 from flask import Blueprint, jsonify, request
 
 from ..controllers import SizeController
@@ -25,6 +25,14 @@ def update_size():
     size, error = SizeController.update(request.json)
     response = size if not error else {'error': error}
     status_code = 200 if not error else 400
+    return jsonify(response), status_code
+
+
+@size.route('/id/<_id>', methods=DELETE)
+def delete_ingredient_by_id(_id: int):
+    size, error = SizeController.delete(_id)
+    response = size if not error else {'error': error}
+    status_code = 200 if size else 404 if not error else 400
     return jsonify(response), status_code
 
 
