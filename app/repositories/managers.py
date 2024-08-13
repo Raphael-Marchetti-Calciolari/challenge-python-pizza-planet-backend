@@ -34,7 +34,9 @@ class BaseManager:
     
     @classmethod
     def delete(cls, _id: Any):
-        cls.session.query(cls.model).filter_by(_id=_id).delete()
+        res = cls.session.query(cls.model).filter_by(_id=_id).delete()
+        if res == 0:
+            return None
         cls.session.commit()
         return "Deleted successfully"
 
