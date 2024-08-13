@@ -9,8 +9,6 @@ ingredient = Blueprint('ingredient', __name__)
 @ingredient.route('/', methods=POST)
 def create_ingredient():
     ingredient, error = IngredientController.create(request.json)
-    if float(ingredient['price']) > 10.0:
-        error = ('Price cannot be greater than $10.00')
     response = ingredient if not error else {'error': error}
     status_code = 200 if not error else 400
     return jsonify(response), status_code
