@@ -26,8 +26,6 @@ class BaseManager:
 
     @classmethod
     def create(cls, entry: dict):
-        if float(entry['price']) > 10.0:
-            raise RuntimeError('Price cannot be greater than $10.00')
         serializer = cls.serializer()
         new_entry = serializer.load(entry)
         cls.session.add(new_entry)
