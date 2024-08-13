@@ -1,4 +1,3 @@
-import pytest
 from app.controllers import (IngredientController, OrderController,
                              SizeController)
 from app.controllers.base import BaseController
@@ -35,22 +34,22 @@ def test_create(app, ingredients, size, client_data):
     created_order, error = OrderController.create(order)
     size_id = order.pop('size_id', None)
     ingredient_ids = order.pop('ingredients', [])
-    pytest.assume(error is None)
+    assert(error is None)
     for param, value in order.items():
-        pytest.assume(param in created_order)
-        pytest.assume(value == created_order[param])
-        pytest.assume(created_order['_id'])
-        pytest.assume(size_id == created_order['size']['_id'])
+        assert(param in created_order)
+        assert(value == created_order[param])
+        assert(created_order['_id'])
+        assert(size_id == created_order['size']['_id'])
 
         ingredients_in_detail = set(item['ingredient']['_id'] for item in created_order['detail'])
-        pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
+        assert(not ingredients_in_detail.difference(ingredient_ids))
 
 
 def test_calculate_order_price(app, ingredients, size, client_data):
     created_size, created_ingredients = __create_sizes_and_ingredients(ingredients, [size])
     order = __order(created_ingredients, created_size, client_data)
     created_order, _ = OrderController.create(order)
-    pytest.assume(created_order['total_price'] == round(created_size['price'] + sum(ingredient['price'] for ingredient in created_ingredients), 2))
+    assert(created_order['total_price'] == round(created_size['price'] + sum(ingredient['price'] for ingredient in created_ingredients), 2))
 
 
 def test_get_by_id(app, ingredients, size, client_data):
@@ -60,13 +59,13 @@ def test_get_by_id(app, ingredients, size, client_data):
     order_from_db, error = OrderController.get_by_id(created_order['_id'])
     size_id = order.pop('size_id', None)
     ingredient_ids = order.pop('ingredients', [])
-    pytest.assume(error is None)
+    assert(error is None)
     for param, value in created_order.items():
-        pytest.assume(order_from_db[param] == value)
-        pytest.assume(size_id == created_order['size']['_id'])
+        assert(order_from_db[param] == value)
+        assert(size_id == created_order['size']['_id'])
 
         ingredients_in_detail = set(item['ingredient']['_id'] for item in created_order['detail'])
-        pytest.assume(not ingredients_in_detail.difference(ingredient_ids))
+        assert(not ingredients_in_detail.difference(ingredient_ids))
 
 
 def test_get_all(app, ingredients, sizes, client_data):
@@ -79,9 +78,9 @@ def test_get_all(app, ingredients, sizes, client_data):
 
     orders_from_db, error = OrderController.get_all()
     searchable_orders = {db_order['_id']: db_order for db_order in orders_from_db}
-    pytest.assume(error is None)
+    assert(error is None)
     for created_order in created_orders:
         current_id = created_order['_id']
         assert current_id in searchable_orders
         for param, value in created_order.items():
-            pytest.assume(searchable_orders[current_id][param] == value)
+            assert(searchable_orders[current_id][param] == value)
