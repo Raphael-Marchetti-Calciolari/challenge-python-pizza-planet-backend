@@ -1,4 +1,4 @@
-from app.common.http_methods import GET, POST, PUT
+from app.common.http_methods import GET, POST, PUT, DELETE
 from flask import Blueprint, jsonify, request
 
 from ..controllers import IngredientController
@@ -19,6 +19,14 @@ def update_ingredient():
     ingredient, error = IngredientController.update(request.json)
     response = ingredient if not error else {'error': error}
     status_code = 200 if not error else 400
+    return jsonify(response), status_code
+
+
+@ingredient.route('/id/<_id>', methods=DELETE)
+def delete_ingredient_by_id(_id: int):
+    ingredient, error = IngredientController.delete(_id)
+    response = ingredient if not error else {'error': error}
+    status_code = 200 if ingredient else 404 if not error else 400
     return jsonify(response), status_code
 
 

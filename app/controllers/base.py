@@ -13,6 +13,15 @@ class BaseController:
         except (SQLAlchemyError, RuntimeError) as ex:
             return None, str(ex)
 
+
+    @classmethod
+    def delete(cls, _id: Any) -> Tuple[Any, Optional[str]]:
+        try:
+            return cls.manager.delete(_id), None
+        except (SQLAlchemyError, RuntimeError) as ex:
+            return None, str(ex)
+
+
     @classmethod
     def get_all(cls) -> Tuple[Any, Optional[str]]:
         try:

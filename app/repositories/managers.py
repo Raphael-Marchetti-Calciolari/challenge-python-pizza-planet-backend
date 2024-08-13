@@ -26,11 +26,19 @@ class BaseManager:
 
     @classmethod
     def create(cls, entry: dict):
+        if float(entry['price']) > 10.0:
+            raise RuntimeError('Price cannot be greater than $10.00')
         serializer = cls.serializer()
         new_entry = serializer.load(entry)
         cls.session.add(new_entry)
         cls.session.commit()
         return serializer.dump(new_entry)
+    
+    @classmethod
+    def delete(cls, _id: Any):
+        cls.session.query(cls.model).filter_by(_id=_id).delete()
+        cls.session.commit()
+        return "Deleted successfully"
 
     @classmethod
     def update(cls, _id: Any, new_values: dict):
