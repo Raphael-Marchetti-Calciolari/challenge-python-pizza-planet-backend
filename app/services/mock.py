@@ -8,7 +8,6 @@ mock = Blueprint('mock', __name__)
 
 @mock.route('/', methods=GET)
 def fill_mock_data():
-    print("Received request on service mock")
     res, error = MockController.fill_mock_data()
     response = res if not error else {'error': error}
     status_code = 200 if res else 404 if not error else 400
@@ -17,7 +16,6 @@ def fill_mock_data():
 
 @mock.route('/', methods=DELETE)
 def clear_mock_data():
-    print("Received request on service mock")
     res, error = MockController.clear_mock_data()
     response = res if not error else {'error': error}
     status_code = 200 if res else 404 if not error else 400
