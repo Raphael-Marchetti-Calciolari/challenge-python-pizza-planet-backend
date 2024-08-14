@@ -1,15 +1,34 @@
 import pytest
 
-from ..utils.functions import (shuffle_list, get_random_sequence,
-                               get_random_string)
+from faker import Faker
+from random import randint
+from ..utils.functions import (
+    get_random_sequence,
+    shuffle_list,
+    get_random_phone,
+    get_random_address,
+    get_random_name,
+    get_random_faker,
+    get_random_choice,
+    get_random_choices
+)
 
 
-def client_data_mock() -> dict:
+def client_data_mock(chosen_faker:Faker = None) -> dict:
+    faker = chosen_faker if chosen_faker else get_random_faker()
     return {
-        'client_address': get_random_string(),
+        'client_address': get_random_address(faker),
         'client_dni': get_random_sequence(),
-        'client_name': get_random_string(),
-        'client_phone': get_random_sequence()
+        'client_name': get_random_name(faker),
+        'client_phone': get_random_phone(faker)
+    }
+
+
+def order_mock(clients, ingredients, sizes) -> dict:
+    return {
+        **get_random_choice(clients),
+        'ingredients': get_random_choices(ingredients),
+        'size_id': randint(1, len(sizes))
     }
 
 

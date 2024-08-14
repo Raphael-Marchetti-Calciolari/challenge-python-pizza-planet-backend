@@ -1,12 +1,15 @@
 import pytest
 
-from ..utils.functions import get_random_price, get_random_string
+from ..utils.functions import (
+    get_random_price,
+    get_random_size_name
+)
 
 
 def size_mock() -> dict:
     return {
-        'name': get_random_string(),
-        'price': get_random_price(10, 20)
+        'name': get_random_size_name(),
+        'price': get_random_price(1.99, 30)
     }
 
 
