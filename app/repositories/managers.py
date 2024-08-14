@@ -6,7 +6,7 @@ from .models import Ingredient, Order, OrderDetail, Size, db
 from .serializers import (IngredientSerializer, OrderSerializer,
                           SizeSerializer, ma)
 
-from ..mocks import load_data
+from ..mocks import DataIngestor, load_data, order_mock
 
 class BaseManager:
     model: Optional[db.Model] = None
@@ -90,8 +90,53 @@ class IndexManager(BaseManager):
 
 
 class MockManager(BaseManager):
+    mock_data:DataIngestor = None
+    orders: List[Order] = []
 
     @classmethod
-    def populate_database(cls):
-        load_data()
-        return 'Database populated'
+    def fill_mock_data(cls):
+        if cls.mock_data is not None:
+            raise RuntimeError('Mock data already filled')
+        cls.mock_data = load_data()
+        new_ingredients = []
+        for ingredient in cls.mock_data.ingredients:
+            new_ingredients.append(
+                IngredientManager.create(ingredient)
+            )
+        cls.mock_data.ingredients = new_ingredients
+        new_sizes = []
+        for size in cls.mock_data.sizes:
+            new_sizes.append(
+                SizeManager.create(size)   
+            )
+        cls.mock_data.sizes = new_sizes
+        new_orders = []
+        for i in range(100):
+            order = order_mock(
+                cls.mock_data.costumers,
+                cls.mock_data.ingredients,
+                cls.mock_data.sizes
+            )
+            order_ingredients = order.pop('ingredients')
+            new_orders.append(
+                OrderManager.create(
+                    order,
+                    IngredientManager.get_by_id_list(order_ingredients)   
+                )
+            )
+        cls.orders = new_orders
+
+        return 'Filled mock data'
+    
+    @classmethod
+    def clear_mock_data(cls):
+        if cls.mock_data is None:
+            raise RuntimeError('No mock data to clear')
+        for ingredient in cls.mock_data.ingredients:
+            IngredientManager.delete(ingredient['_id'])
+        for size in cls.mock_data.sizes:
+            SizeManager.delete(size['_id'])
+        for order in cls.orders:
+            OrderManager.delete(order['_id'])
+        cls.mock_data = None
+        return 'Mock data cleared'

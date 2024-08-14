@@ -6,49 +6,32 @@ from .order import order_mock
 class DataIngestor:
     ingredients = []
     sizes = []
-    orders = []
+    costumers = []
 
-    def __init__(self, ingredients, sizes, orders):
+    def __init__(self, ingredients, sizes, costumers):
         self.ingredients = ingredients
         self.sizes = sizes
-        self.orders = orders
+        self.costumers = costumers
+
+    def __str__(self) -> str:
+        return f'Ingredients: {self.ingredients}\nSizes: {self.sizes}\nCostumers: {self.costumers}'
 
 def load_data():
     mock_ingredients = []
     mock_sizes = []
     mock_costumers = []
-    mock_orders = []
 
-    print('\n### Generating Ingredients ###')
     for i in range(10):
-        new_ingredient = ingredient_mock()
-        mock_ingredients.append(new_ingredient)
-        print(new_ingredient)
+        mock_ingredients.append(ingredient_mock())
 
-    print('\n### Generating Pizza Sizes ###')
     for i in range(5):
-        new_size = size_mock()
-        mock_sizes.append(new_size)
-        print(new_size)
+        mock_sizes.append(size_mock())
 
-    print('\n### Generating Customers ###')
     for i in range(20):
-        new_costumer = client_data_mock()
-        mock_costumers.append(new_costumer)
-        print(new_costumer)
-
-    print('\n### Generating Orders ###')
-    for i in range(100):
-        new_order = order_mock(
-            mock_costumers,
-            mock_ingredients,
-            mock_sizes
-        )
-        mock_orders.append(new_order)
-        print(new_order)
+        mock_costumers.append(client_data_mock())
 
     return DataIngestor(
         mock_ingredients,
         mock_sizes,
-        mock_orders
+        mock_costumers
     )
