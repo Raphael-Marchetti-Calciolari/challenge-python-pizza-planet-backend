@@ -140,3 +140,12 @@ class MockManager(BaseManager):
             OrderManager.delete(order['_id'])
         cls.mock_data = None
         return 'Mock data cleared'
+
+
+class ReportManager(BaseManager):
+    mock_data:DataIngestor = None
+    orders: List[Order] = []
+
+    @classmethod
+    def get_report(cls):
+        return "Called report"
