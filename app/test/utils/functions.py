@@ -87,18 +87,14 @@ def get_random_name(chosen_faker:Faker = None) -> str:
 
 
 def get_random_ingredient_name() -> str:
-    if len(ingredients) <= 0:
-        faker = get_random_faker()
-        return faker.random_object_name()
+    if len(ingredients) <= 0: return get_random_string()
     choice = get_random_choice(ingredients)
     ingredients.remove(choice)
     return choice
 
 
 def get_random_size_name() -> str:
-    if len(sizes) <= 0:
-        faker = get_random_faker()
-        return faker.random_object_name()
+    if len(ingredients) <= 0: return get_random_string()
     choice = get_random_choice(sizes)
     sizes.remove(choice)
     return choice

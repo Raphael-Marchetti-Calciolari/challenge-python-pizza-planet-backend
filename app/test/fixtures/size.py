@@ -8,7 +8,7 @@ from ..utils.functions import (
 
 def size_mock() -> dict:
     return {
-        'name': get_random_size_name(),
+        'name': get_random_size_name().capitalize(),
         'price': get_random_price(1.99, 30)
     }
 
