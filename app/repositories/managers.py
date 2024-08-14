@@ -8,6 +8,9 @@ from .serializers import (IngredientSerializer, OrderSerializer,
 
 from ..mocks import DataIngestor, load_data, order_mock
 
+from datetime import datetime, timedelta, UTC
+import random
+
 class BaseManager:
     model: Optional[db.Model] = None
     serializer: Optional[ma.SQLAlchemyAutoSchema] = None
@@ -93,6 +96,12 @@ class MockManager(BaseManager):
     mock_data:DataIngestor = None
     orders: List[Order] = []
 
+    def get_random_date() -> datetime:
+        start_date = datetime.now(UTC) - timedelta(days=365)
+        end_date = datetime.now(UTC)
+        random_date = start_date + (end_date - start_date) * random.random()
+        return random_date
+
     @classmethod
     def fill_mock_data(cls):
         if cls.mock_data is not None:
@@ -117,6 +126,7 @@ class MockManager(BaseManager):
                 cls.mock_data.ingredients,
                 cls.mock_data.sizes
             )
+            order['date'] = cls.get_random_date()
             order_ingredients = order.pop('ingredients')
             new_orders.append(
                 OrderManager.create(
