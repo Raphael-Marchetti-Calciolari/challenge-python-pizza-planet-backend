@@ -1,0 +1,1 @@
+from .data_ingestor import load_data

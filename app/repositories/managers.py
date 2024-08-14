@@ -6,6 +6,7 @@ from .models import Ingredient, Order, OrderDetail, Size, db
 from .serializers import (IngredientSerializer, OrderSerializer,
                           SizeSerializer, ma)
 
+from ..mocks import load_data
 
 class BaseManager:
     model: Optional[db.Model] = None
@@ -86,3 +87,11 @@ class IndexManager(BaseManager):
     @classmethod
     def test_connection(cls):
         cls.session.query(column('1')).from_statement(text('SELECT 1')).all()
+
+
+class MockManager(BaseManager):
+
+    @classmethod
+    def populate_database(cls):
+        load_data()
+        return 'Database populated'
