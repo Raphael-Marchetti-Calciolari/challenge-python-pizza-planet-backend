@@ -5,7 +5,6 @@ def order_mock(clients, ingredients, sizes) -> dict:
     chosen_ingredients = clear_duplicates(
         utils.get_random_choices(ingredients)
     )
-    print("\n", chosen_ingredients, "\n")
     chosen_size = utils.get_random_choice(sizes)
 
     ingredients_ids = [item['_id'] for item in chosen_ingredients]
