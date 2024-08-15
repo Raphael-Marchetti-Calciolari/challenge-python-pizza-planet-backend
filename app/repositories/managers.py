@@ -2,8 +2,8 @@ from typing import Any, List, Optional, Sequence
 
 from sqlalchemy.sql import text, column
 
-from .models import Ingredient, Order, OrderDetail, Size, db
-from .serializers import (IngredientSerializer, OrderSerializer,
+from .models import Ingredient, Beverage, Order, BeverageOrderDetail, IngredientOrderDetail, Size, db
+from .serializers import (IngredientSerializer, BeverageSerializer, OrderSerializer,
                           SizeSerializer, ma)
 
 from ..mocks import DataIngestor, load_data, order_mock
@@ -66,18 +66,29 @@ class IngredientManager(BaseManager):
         return cls.session.query(cls.model).filter(cls.model._id.in_(set(ids))).all() or []
 
 
+class BeverageManager(BaseManager):
+    model = Beverage
+    serializer = BeverageSerializer
+
+    @classmethod
+    def get_by_id_list(cls, ids: Sequence):
+        return cls.session.query(cls.model).filter(cls.model._id.in_(set(ids))).all() or []
+
+
 class OrderManager(BaseManager):
     model = Order
     serializer = OrderSerializer
 
     @classmethod
-    def create(cls, order_data: dict, ingredients: List[Ingredient]):
+    def create(cls, order_data: dict, ingredients: List[Ingredient], beverages: List[Beverage]):
         new_order = cls.model(**order_data)
         cls.session.add(new_order)
         cls.session.flush()
         cls.session.refresh(new_order)
-        cls.session.add_all((OrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price)
+        cls.session.add_all((IngredientOrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price)
                              for ingredient in ingredients))
+        cls.session.add_all((BeverageOrderDetail(order_id=new_order._id, beverage_id=beverage._id, beverage_price=beverage.price)
+                             for beverage in beverages))
         cls.session.commit()
         return cls.serializer().dump(new_order)
 
@@ -114,6 +125,12 @@ class MockManager(BaseManager):
                 IngredientManager.create(ingredient)
             )
         cls.mock_data.ingredients = new_ingredients
+        new_beverages = []
+        for beverage in cls.mock_data.beverages:
+            new_beverages.append(
+                BeverageManager.create(beverage)
+            )
+        cls.mock_data.beverages = new_beverages
         new_sizes = []
         for size in cls.mock_data.sizes:
             new_sizes.append(
@@ -125,14 +142,17 @@ class MockManager(BaseManager):
             order = order_mock(
                 cls.mock_data.costumers,
                 cls.mock_data.ingredients,
+                cls.mock_data.beverages,
                 cls.mock_data.sizes
             )
             order['date'] = cls.get_random_date()
             order_ingredients = order.pop('ingredients')
+            order_beverages = order.pop('beverages')
             new_orders.append(
                 OrderManager.create(
                     order,
-                    IngredientManager.get_by_id_list(order_ingredients)   
+                    IngredientManager.get_by_id_list(order_ingredients),
+                    BeverageManager.get_by_id_list(order_beverages)
                 )
             )
         cls.orders = new_orders
@@ -146,6 +166,9 @@ class MockManager(BaseManager):
         for ingredient in cls.mock_data.ingredients:
             utils.ingredients.append(ingredient['name'])
             IngredientManager.delete(ingredient['_id'])
+        for beverage in cls.mock_data.beverages:
+            utils.beverages.append(beverage['name'])
+            BeverageManager.delete(beverage['_id'])
         for size in cls.mock_data.sizes:
             utils.sizes.append(size['name'])
             SizeManager.delete(size['_id'])
@@ -184,8 +207,8 @@ class ReportManager(BaseManager):
         orders = OrderManager.get_all()
         ingredients_count = {}
         for order in orders:
-            if 'detail' not in order: continue
-            for detail in order['detail']:
+            if 'ingredient_detail' not in order: continue
+            for detail in order['ingredient_detail']:
                 if 'ingredient' in detail:
                     ingredient = detail['ingredient']
                     if ingredient['name'] not in ingredients_count:

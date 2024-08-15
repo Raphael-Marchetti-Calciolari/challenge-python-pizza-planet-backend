@@ -22,6 +22,17 @@ ingredients = [
 ]
 
 
+beverages = [
+    "soda", "water", "juice",
+    "coffee", "tea", "milk",
+    "lemonade", "smoothie", "cocktail",
+    "beer", "wine", "whiskey",
+    "vodka", "rum", "gin",
+    "margarita", "mojito", "martini",
+    "mocktail", "iced tea", "hot chocolate"
+]
+
+
 sizes = [
     "mini", "extra small", "small",
     "child size", "medium", "personal",
@@ -87,6 +98,13 @@ def get_random_ingredient_name() -> str:
     if len(ingredients) <= 0: return get_random_string()
     choice = get_random_choice(ingredients)
     ingredients.remove(choice)
+    return choice
+
+
+def get_random_beverage_name() -> str:
+    if len(beverages) <= 0: return get_random_string()
+    choice = get_random_choice(beverages)
+    beverages.remove(choice)
     return choice
 
 
