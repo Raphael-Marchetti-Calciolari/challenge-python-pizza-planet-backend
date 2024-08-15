@@ -1,7 +1,9 @@
-from app.common.http_methods import GET, POST, DELETE
+from app.common.http_methods import GET, POST, PUT, DELETE
 from flask import Blueprint, jsonify, request
 
 from ..controllers import OrderController
+
+from .base_service import BaseService
 
 order = Blueprint('order', __name__)
 
@@ -14,25 +16,21 @@ def create_order():
     return jsonify(response), status_code
 
 
+@order.route('/', methods=PUT)
+def update_order():
+    return BaseService.update(request, OrderController)
+
+
+@order.route('/id/<_id>', methods=DELETE)
+def delete_order_by_id(_id: int):
+    return BaseService.delete_by_id(_id, OrderController)
+
+
 @order.route('/id/<_id>', methods=GET)
 def get_order_by_id(_id: int):
-    order, error = OrderController.get_by_id(_id)
-    response = order if not error else {'error': error}
-    status_code = 200 if order else 404 if not error else 400
-    return jsonify(response), status_code
+    return BaseService.get_by_id(_id, OrderController)
 
 
 @order.route('/', methods=GET)
 def get_orders():
-    orders, error = OrderController.get_all()
-    response = orders if not error else {'error': error}
-    status_code = 200 if orders else 404 if not error else 400
-    return jsonify(response), status_code
-
-        
-@order.route('/id/<_id>', methods=DELETE)
-def delete_order_by_id(_id: int):
-    size, error = OrderController.delete(_id)
-    response = size if not error else {'error': error}
-    status_code = 200 if size else 404 if not error else 400
-    return jsonify(response), status_code
+    return BaseService.get_all(OrderController)
