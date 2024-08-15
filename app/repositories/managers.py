@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Sequence
 
 from sqlalchemy.sql import text, column
 
-from .models import Ingredient, Beverage, Order, BeverageOrderDetail, OrderDetail, Size, db
+from .models import Ingredient, Beverage, Order, BeverageOrderDetail, IngredientOrderDetail, Size, db
 from .serializers import (IngredientSerializer, BeverageSerializer, OrderSerializer,
                           SizeSerializer, ma)
 
@@ -85,7 +85,7 @@ class OrderManager(BaseManager):
         cls.session.add(new_order)
         cls.session.flush()
         cls.session.refresh(new_order)
-        cls.session.add_all((OrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price)
+        cls.session.add_all((IngredientOrderDetail(order_id=new_order._id, ingredient_id=ingredient._id, ingredient_price=ingredient.price)
                              for ingredient in ingredients))
         cls.session.add_all((BeverageOrderDetail(order_id=new_order._id, beverage_id=beverage._id, beverage_price=beverage.price)
                              for beverage in beverages))
