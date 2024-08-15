@@ -8,6 +8,7 @@ from app.plugins import db, ma
 from app.repositories.models import Ingredient, Order, IngredientOrderDetail, BeverageOrderDetail, Size
 
 from .fixtures.ingredient import *
+from .fixtures.beverage import *
 from .fixtures.order import *
 from .fixtures.size import *
 
