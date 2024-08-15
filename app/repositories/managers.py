@@ -207,8 +207,8 @@ class ReportManager(BaseManager):
         orders = OrderManager.get_all()
         ingredients_count = {}
         for order in orders:
-            if 'detail' not in order: continue
-            for detail in order['detail']:
+            if 'ingredient_detail' not in order: continue
+            for detail in order['ingredient_detail']:
                 if 'ingredient' in detail:
                     ingredient = detail['ingredient']
                     if ingredient['name'] not in ingredients_count:
