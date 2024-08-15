@@ -10,6 +10,7 @@ from ..mocks import DataIngestor, load_data, order_mock
 
 from datetime import datetime, timedelta, UTC
 import random
+from ..common import utils
 
 class BaseManager:
     model: Optional[db.Model] = None
@@ -143,8 +144,10 @@ class MockManager(BaseManager):
         if cls.mock_data is None:
             raise RuntimeError('No mock data to clear')
         for ingredient in cls.mock_data.ingredients:
+            utils.ingredients.append(ingredient['name'])
             IngredientManager.delete(ingredient['_id'])
         for size in cls.mock_data.sizes:
+            utils.sizes.append(size['name'])
             SizeManager.delete(size['_id'])
         for order in cls.orders:
             OrderManager.delete(order['_id'])
