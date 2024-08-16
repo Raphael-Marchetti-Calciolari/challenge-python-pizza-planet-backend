@@ -16,9 +16,10 @@ class DataIngestor:
         self.costumers = costumers
 
     def __str__(self) -> str:
-        return f'Ingredients: {self.ingredients}\nBeverages: {self.beverages}\nSizes: {self.sizes}\nCostumers: {self.costumers}'
+        return f'''Ingredients: {self.ingredients}\nBeverages: {self.beverages}
+        Sizes: {self.sizes}\nCostumers: {self.costumers}'''
 
-def load_data():
+def gen_mock_data():
     mock_ingredients = []
     mock_beverages = []
     mock_sizes = []

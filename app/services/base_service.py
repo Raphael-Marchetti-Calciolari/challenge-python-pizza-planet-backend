@@ -1,33 +1,29 @@
 from flask import jsonify, Request
 from ..controllers.base import BaseController
+from typing import Tuple, Any
 
 class BaseService:
     def create(request: Request, controller: BaseController):
-        data, error = controller.create(request.json)
-        response = data if not error else {'error': error}
-        status_code = 200 if not error else 400
-        return jsonify(response), status_code
+        return BaseService.check_response(*controller.create(request.json))
+
 
     def update(request: Request, controller: BaseController):
-        data, error = controller.update(request.json)
-        response = data if not error else {'error': error}
-        status_code = 200 if not error else 400
-        return jsonify(response), status_code
+        return BaseService.check_response(*controller.update(request.json))
+
 
     def delete_by_id(_id: int, controller: BaseController):
-        data, error = controller.delete(_id)
-        response = data if not error else {'error': error}
-        status_code = 200 if data else 404 if not error else 400
-        return jsonify(response), status_code
+        return BaseService.check_response(*controller.delete(_id))
+
 
     def get_by_id(_id: int, controller: BaseController):
-        data, error = controller.get_by_id(_id)
-        response = data if not error else {'error': error}
-        status_code = 200 if data else 404 if not error else 400
-        return jsonify(response), status_code
+        return BaseService.check_response(*controller.get_by_id(_id))
+
 
     def get_all(controller: BaseController):
-        data, error = controller.get_all()
+        return BaseService.check_response(*controller.get_all())
+    
+
+    def check_response(data: Tuple[Any, str], error):
         response = data if not error else {'error': error}
         status_code = 200 if data else 404 if not error else 400
         return jsonify(response), status_code

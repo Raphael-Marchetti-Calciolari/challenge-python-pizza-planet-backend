@@ -1,5 +1,5 @@
 from app.common.http_methods import GET, POST, PUT, DELETE
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 
 from ..controllers import SizeController
 

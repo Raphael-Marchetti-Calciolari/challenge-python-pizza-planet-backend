@@ -1,5 +1,5 @@
 from app.common.http_methods import GET, POST, PUT, DELETE
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 
 from ..controllers import OrderController
 
@@ -10,10 +10,7 @@ order = Blueprint('order', __name__)
 
 @order.route('/', methods=POST)
 def create_order():
-    order, error = OrderController.create(request.json)
-    response = order if not error else {'error': error}
-    status_code = 200 if not error else 400
-    return jsonify(response), status_code
+    return BaseService.check_response(*OrderController.create(request.json))
 
 
 @order.route('/', methods=PUT)
