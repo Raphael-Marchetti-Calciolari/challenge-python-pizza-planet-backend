@@ -1,5 +1,5 @@
 from typing import List
-from .base_manager import BaseManager
+from .base import BaseManager
 from ..models import Ingredient, Beverage, Order, IngredientOrderDetail, BeverageOrderDetail
 from ..serializers import OrderSerializer
 

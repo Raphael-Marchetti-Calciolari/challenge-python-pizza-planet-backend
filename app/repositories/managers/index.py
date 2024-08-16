@@ -1,6 +1,6 @@
 from sqlalchemy.sql import text, column
 
-from .base_manager import BaseManager
+from .base import BaseManager
 
 class IndexManager(BaseManager):
 

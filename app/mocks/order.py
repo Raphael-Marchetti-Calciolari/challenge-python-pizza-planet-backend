@@ -1,4 +1,3 @@
-from random import randint
 from ..common import utils
 
 def order_mock(clients, ingredients, beverages, sizes) -> dict:

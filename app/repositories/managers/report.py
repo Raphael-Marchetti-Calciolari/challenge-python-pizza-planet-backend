@@ -1,5 +1,5 @@
-from .base_manager import BaseManager
-from .order_manager import OrderManager
+from .base import BaseManager
+from .order import OrderManager
 from datetime import datetime
 
 class ReportManager(BaseManager):

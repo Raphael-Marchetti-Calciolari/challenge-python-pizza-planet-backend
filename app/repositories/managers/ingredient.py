@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from .base_manager import BaseManager
+from .base import BaseManager
 from ..models import Ingredient
 from ..serializers import IngredientSerializer
 

@@ -1,9 +1,9 @@
 from typing import List
-from .base_manager import BaseManager
-from .ingredient_manager import IngredientManager
-from .beverage_manager import BeverageManager
-from .size_manager import SizeManager
-from .order_manager import OrderManager
+from .base import BaseManager
+from .ingredient import IngredientManager
+from .beverage import BeverageManager
+from .size import SizeManager
+from .order import OrderManager
 from ..models import Order
 from ...common import utils
 from ...mocks import DataIngestor, gen_mock_data, order_mock
