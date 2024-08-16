@@ -1,4 +1,10 @@
 SUBMODULE_NAME = ui
+MIGRATIONS_DIR = migrations
+SQLITEDB = pizza.sqlite
+
+clear:
+	rm -rf $(MIGRATIONS_DIR)
+	rm -f $(SQLITEDB)
 
 update:
 	git pull -a
@@ -17,3 +23,6 @@ run:
 	@echo
 	@echo "Starting server..."
 	@python3 manage.py run
+
+test:
+	@python3 manage.py test

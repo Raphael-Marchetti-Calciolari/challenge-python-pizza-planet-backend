@@ -116,27 +116,27 @@ class MockManager(BaseManager):
 
     @classmethod
     def fill_mock_data(cls):
-        if cls.mock_data is not None:
-            raise RuntimeError('Mock data already filled')
-        cls.mock_data = load_data()
-        new_ingredients = []
-        for ingredient in cls.mock_data.ingredients:
-            new_ingredients.append(
-                IngredientManager.create(ingredient)
-            )
-        cls.mock_data.ingredients = new_ingredients
-        new_beverages = []
-        for beverage in cls.mock_data.beverages:
-            new_beverages.append(
-                BeverageManager.create(beverage)
-            )
-        cls.mock_data.beverages = new_beverages
-        new_sizes = []
-        for size in cls.mock_data.sizes:
-            new_sizes.append(
-                SizeManager.create(size)   
-            )
-        cls.mock_data.sizes = new_sizes
+        if cls.mock_data is None: 
+            cls.mock_data = load_data()
+            new_ingredients = []
+            for ingredient in cls.mock_data.ingredients:
+                new_ingredients.append(
+                    IngredientManager.create(ingredient)
+                )
+            cls.mock_data.ingredients = new_ingredients
+            new_beverages = []
+            for beverage in cls.mock_data.beverages:
+                new_beverages.append(
+                    BeverageManager.create(beverage)
+                )
+            cls.mock_data.beverages = new_beverages
+            new_sizes = []
+            for size in cls.mock_data.sizes:
+                new_sizes.append(
+                    SizeManager.create(size)   
+                )
+            cls.mock_data.sizes = new_sizes
+
         new_orders = []
         for i in range(100):
             order = order_mock(
@@ -155,7 +155,8 @@ class MockManager(BaseManager):
                     BeverageManager.get_by_id_list(order_beverages)
                 )
             )
-        cls.orders = new_orders
+        if cls.orders: cls.orders.extend(new_orders)
+        else: cls.orders = new_orders
 
         return 'Filled mock data'
     
@@ -211,6 +212,7 @@ class ReportManager(BaseManager):
             for detail in order['ingredient_detail']:
                 if 'ingredient' in detail:
                     ingredient = detail['ingredient']
+                    if not ingredient: continue
                     if ingredient['name'] not in ingredients_count:
                         ingredients_count[ingredient['name']] = 1
                     else:
