@@ -10,8 +10,8 @@ def order_mock(clients, ingredients, beverages, sizes) -> dict:
     )
     chosen_size = utils.get_random_choice(sizes)
 
-    ingredients_ids = [item['_id'] for item in chosen_ingredients]
-    beverages_ids = [item['_id'] for item in chosen_beverages]
+    ingredients_ids = extract_ids(chosen_ingredients)
+    beverages_ids = extract_ids(chosen_beverages)
     size_price = chosen_size['price']
 
     return {
@@ -25,6 +25,10 @@ def order_mock(clients, ingredients, beverages, sizes) -> dict:
             chosen_beverages
         )
     }
+
+
+def extract_ids(items: list):
+    return [item['_id'] for item in items]
 
 
 def calculate_order_price(size_price: float, ingredients: list, beverages: list):

@@ -1,6 +1,6 @@
 from .data_ingestor import (
     DataIngestor,
-    load_data
+    gen_mock_data
 )
 
 from .order import order_mock

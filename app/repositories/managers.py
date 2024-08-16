@@ -6,7 +6,7 @@ from .models import Ingredient, Beverage, Order, BeverageOrderDetail, Ingredient
 from .serializers import (IngredientSerializer, BeverageSerializer, OrderSerializer,
                           SizeSerializer, ma)
 
-from ..mocks import DataIngestor, load_data, order_mock
+from ..mocks import DataIngestor, gen_mock_data, order_mock
 
 from datetime import datetime, timedelta, UTC
 import random
@@ -117,7 +117,7 @@ class MockManager(BaseManager):
     @classmethod
     def fill_mock_data(cls):
         if cls.mock_data is None: 
-            cls.mock_data = load_data()
+            cls.mock_data = gen_mock_data()
             new_ingredients = []
             for ingredient in cls.mock_data.ingredients:
                 new_ingredients.append(
