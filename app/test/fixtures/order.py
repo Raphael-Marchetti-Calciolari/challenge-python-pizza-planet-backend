@@ -4,7 +4,6 @@ from faker import Faker
 from random import randint
 from ..utils.functions import (
     get_random_sequence,
-    shuffle_list,
     get_random_phone,
     get_random_address,
     get_random_name,
@@ -24,17 +23,18 @@ def client_data_mock(chosen_faker:Faker = None) -> dict:
     }
 
 
-def order_mock(clients, ingredients, sizes) -> dict:
+def order_mock(clients, ingredients, beverages, sizes) -> dict:
     return {
         **get_random_choice(clients),
         'ingredients': get_random_choices(ingredients),
+        'beverages': get_random_choices(beverages),
         'size_id': randint(1, len(sizes))
     }
 
 
 @pytest.fixture
 def order_uri():
-    return '/order'
+    return '/order/'
 
 
 @pytest.fixture
@@ -43,26 +43,33 @@ def client_data():
 
 
 @pytest.fixture
-def order(create_ingredients, create_size, client_data) -> dict:
+def create_order(client, order_uri, create_ingredients, create_beverages, create_sizes) -> dict:
+    clients = [client_data_mock() for _ in range(10)]
     ingredients = [ingredient.get('_id') for ingredient in create_ingredients]
-    size_id = create_size.get('_id')
-    return {
-        **client_data_mock(),
-        'ingredients': ingredients,
-        'size_id': size_id
-    }
+    beverages = [beverage.get('_id') for beverage in create_beverages]
+    sizes = [size.get('_id') for size in create_sizes]
+    response = client.post(order_uri, json=order_mock(
+        clients=clients,
+        ingredients=ingredients,
+        beverages=beverages,
+        sizes=sizes
+    ))
+    return response
 
 
 @pytest.fixture
-def create_orders(client, order_uri, create_ingredients, create_sizes) -> list:
-    ingredients = [ingredient.get('_id') for ingredient in create_ingredients]
-    sizes = [size.get('_id') for size in create_sizes]
+def create_orders(client, order_uri, create_ingredients, create_beverages, create_sizes) -> list:
     orders = []
+    clients = [client_data_mock() for _ in range(10)]
+    ingredients = [ingredient.get('_id') for ingredient in create_ingredients]
+    beverages = [beverage.get('_id') for beverage in create_beverages]
+    sizes = [size.get('_id') for size in create_sizes]
     for _ in range(10):
-        new_order = client.post(order_uri, json={
-            **client_data_mock(),
-            'ingredients': shuffle_list(ingredients)[:5],
-            'size_id': shuffle_list(sizes)[0]
-        })
-        orders.append(new_order)
+        new_order = client.post(order_uri, json=order_mock(
+            clients=clients,
+            ingredients=ingredients,
+            beverages=beverages,
+            sizes=sizes
+        ))
+        orders.append(new_order.json)
     return orders

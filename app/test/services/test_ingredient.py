@@ -19,6 +19,14 @@ def test_update_ingredient_service(client, create_ingredient, ingredient_uri):
         assert(updated_ingredient[param] == value)
 
 
+def test_delete_ingredient_by_id_service(client, create_ingredient, ingredient_uri):
+    current_ingredient = create_ingredient.json
+    response = client.delete(f'{ingredient_uri}id/{current_ingredient["_id"]}')
+    assert(response.status.startswith('200'))
+    response = client.delete(ingredient_uri, json=current_ingredient)
+    assert(response.status.startswith('4'))
+
+
 def test_get_ingredient_by_id_service(client, create_ingredient, ingredient_uri):
     print(f'Current ingredient: {create_ingredient}')
     current_ingredient = create_ingredient.json

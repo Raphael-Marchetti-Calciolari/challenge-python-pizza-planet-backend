@@ -19,6 +19,14 @@ def test_update_size_service(client, create_size, size_uri):
         assert(updated_size[param] == value)
 
 
+def test_delete_size_by_id_service(client, create_size, size_uri):
+    current_size = create_size.json
+    response = client.delete(f'{size_uri}id/{current_size["_id"]}')
+    assert(response.status.startswith('200'))
+    response = client.delete(size_uri, json=current_size)
+    assert(response.status.startswith('4'))
+
+
 def test_get_size_by_id_service(client, create_size, size_uri):
     current_size = create_size.json
     response = client.get(f'{size_uri}id/{current_size["_id"]}')
