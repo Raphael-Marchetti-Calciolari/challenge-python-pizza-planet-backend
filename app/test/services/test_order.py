@@ -20,6 +20,14 @@ def test_update_order_service(client, order_uri):
     assert(response.status.startswith('4'))
 
 
+def test_delete_order_by_id_service(client, create_order, order_uri):
+    current_order = create_order.json
+    response = client.delete(f'{order_uri}id/{current_order["_id"]}')
+    assert(response.status.startswith('200'))
+    response = client.delete(order_uri, json=current_order)
+    assert(response.status.startswith('4'))
+
+
 def test_get_order_by_id_service(client, create_order, order_uri):
     print(f'Current order: {create_order}')
     current_order = create_order.json
