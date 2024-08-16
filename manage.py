@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 from app import flask_app
 from app.plugins import db
 # flake8: noqa
-from app.repositories.models.models import Ingredient, Beverage, Order, IngredientOrderDetail, BeverageOrderDetail, Size
+from app.repositories.models import Ingredient, Beverage, Order, IngredientOrderDetail, BeverageOrderDetail, Size
 
 
 manager = FlaskGroup(flask_app)
