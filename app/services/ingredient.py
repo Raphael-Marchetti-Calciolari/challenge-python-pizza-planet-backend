@@ -13,7 +13,7 @@ def create_ingredient():
     return BaseService.create(request, IngredientController)
 
 
-@ingredient.route('/', methods=PUT)
+@ingredient.route('/id/<_id>', methods=PUT)
 def update_ingredient():
     return BaseService.update(request, IngredientController)
 

@@ -13,7 +13,7 @@ def create_order():
     return BaseService.check_response(*OrderController.create(request.json))
 
 
-@order.route('/', methods=PUT)
+@order.route('/id/<_id>', methods=PUT)
 def update_order():
     return BaseService.update(request, OrderController)
 

@@ -13,7 +13,7 @@ def create_beverage():
     return BaseService.create(request, BeverageController)
 
 
-@beverage.route('/', methods=PUT)
+@beverage.route('/id/<_id>', methods=PUT)
 def update_beverage():
     return BaseService.update(request, BeverageController)
 
